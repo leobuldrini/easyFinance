@@ -13,7 +13,7 @@ final lightTheme = ThemeData(
         onTertiary: Color(0xff181818),
         outline: Color(0xff1b263b),
         error: Color(0xffbc4749),
-        surface: Color(0xffcbf3f0)),
+        surface: Color(0xFF17203A)),
     fontFamily: 'Montserrat',
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -27,8 +27,8 @@ final lightTheme = ThemeData(
     ));
 
 final darkTheme = ThemeData(
-    brightness: Brightness.light,
-    colorScheme: const ColorScheme.light(
+    brightness: Brightness.dark,
+    colorScheme: const ColorScheme.dark(
         primary: Color(0xff57cc99),
         secondary: Color(0xff80ed99),
         tertiary: Color(0xffc7f9cc),
@@ -39,7 +39,7 @@ final darkTheme = ThemeData(
         onTertiary: Color(0xff181818),
         outline: Color(0xff1b263b),
         error: Color(0xffbc4749),
-        surface: Color(0xffcbf3f0)),
+        surface: Color(0xFF17203A)),
     fontFamily: 'Montserrat',
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
