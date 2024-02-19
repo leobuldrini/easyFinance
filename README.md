@@ -1,4 +1,4 @@
-# judge
+# EasyFinance
 
 A new Flutter project.
 
