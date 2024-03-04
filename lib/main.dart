@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:judge/navBar/bottom_nav_animated.dart';
+import 'package:judge/screens/dashboard.dart';
 
 import 'misc/theme.dart';
 
@@ -15,11 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Judge - Finanças Pessoais',
+      title: 'EasyFinance - Finanças Pessoais',
       theme: lightTheme,
       darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
-      home: const BottomNavWithAnimatedIcons(),
+      home: const DashboardPage(),
     );
   }
 }
