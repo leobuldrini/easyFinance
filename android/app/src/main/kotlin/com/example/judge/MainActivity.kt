@@ -1,4 +1,4 @@
-package com.example.judge
+package com.example.easyFinance
 
 import io.flutter.embedding.android.FlutterActivity
 

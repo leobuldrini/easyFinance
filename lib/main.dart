@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:judge/screens/dashboard.dart';
+import 'package:easyFinance/screens/dashboard.dart';
 
 import 'misc/theme.dart';
 

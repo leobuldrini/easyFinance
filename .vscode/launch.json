@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "judge",
+            "name": "easyFinance",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "judge (profile mode)",
+            "name": "easyFinance (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "judge (release mode)",
+            "name": "easyFinance (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
