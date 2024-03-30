@@ -1,3 +1,4 @@
+import 'package:easyFinance/core/models/transaction.dart';
 import 'package:easyFinance/core/models/user.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,68 +11,43 @@ final userProvider = StateProvider<User>((ref) {
   );
 });
 
-final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Map<String,dynamic>>>((ref) async {
+final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transaction>>((ref) async {
   await Future.delayed(const Duration(seconds: 1));
   return [
-    {
-      'id': 1,
-      'title': 'Netflix',
-      'value': 22.50,
-      'date': '2021-09-01',
-    },
-    {
-      'id': 2,
-      'title': 'Spotify',
-      'value': 16.90,
-      'date': '2021-09-02',
-    },
-    {
-      'id': 3,
-      'title': 'Amazon',
-      'value': 100.00,
-      'date': '2021-09-03',
-    },
-    {
-      'id': 4,
-      'title': 'Apple',
-      'value': 50.00,
-      'date': '2021-09-04',
-    },
-    {
-      'id': 5,
-      'title': 'Google',
-      'value': 30.00,
-      'date': '2021-09-05',
-    },
-    {
-      'id': 1,
-      'title': 'Netflix',
-      'value': 22.50,
-      'date': '2021-09-01',
-    },
-    {
-      'id': 2,
-      'title': 'Spotify',
-      'value': 16.90,
-      'date': '2021-09-02',
-    },
-    {
-      'id': 3,
-      'title': 'Amazon',
-      'value': 100.00,
-      'date': '2021-09-03',
-    },
-    {
-      'id': 4,
-      'title': 'Apple',
-      'value': 50.00,
-      'date': '2021-09-04',
-    },
-    {
-      'id': 5,
-      'title': 'Google',
-      'value': 30.00,
-      'date': '2021-09-05',
-    },
+    Transaction(
+      id: '1',
+      title: 'Teste',
+      amount: 100.00,
+      date: DateTime.now(),
+      sector: 'Teste',
+    ),
+    Transaction(
+      id: '2',
+      title: 'Teste',
+      amount: 100.00,
+      date: DateTime.now(),
+      sector: 'Teste',
+    ),
+    Transaction(
+      id: '3',
+      title: 'Teste',
+      amount: 100.00,
+      date: DateTime.now(),
+      sector: 'Teste',
+    ),
+    Transaction(
+      id: '4',
+      title: 'Teste',
+      amount: 100.00,
+      date: DateTime.now(),
+      sector: 'Teste',
+    ),
+    Transaction(
+      id: '5',
+      title: 'Teste',
+      amount: 100.00,
+      date: DateTime.now(),
+      sector: 'Teste',
+    ),
   ];
 });

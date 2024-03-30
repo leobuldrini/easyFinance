@@ -1,3 +1,4 @@
+import 'package:easyFinance/core/models/transaction.dart';
 import 'package:easyFinance/core/providers/user_controller_provider.dart';
 import 'package:easyFinance/widgets/recent_transaction.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,7 @@ class DashboardPage extends ConsumerWidget {
                       const SizedBox(height: 20),
                       recentTransactions.when(
                         data: (data) {
+                          List<Transaction> transactions = data;
                           return data.isEmpty
                               ? noTransactions()
                               : ListView.separated(
@@ -63,10 +65,10 @@ class DashboardPage extends ConsumerWidget {
                                     return Container(
                                       margin: const EdgeInsets.only(bottom: 10),
                                       child: RecentTransactionTile(
-                                        title: data[index]['title'],
-                                        subtitle: data[index]['date'],
-                                        amount: data[index]['value'],
-                                        date: data[index]['date'],
+                                        title: transactions[index].title,
+                                        subtitle: transactions[index].sector,
+                                        amount: transactions[index].amount,
+                                        date: transactions[index].date,
                                       ),
                                     );
                                   },
