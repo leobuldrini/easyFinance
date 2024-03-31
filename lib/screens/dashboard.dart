@@ -1,5 +1,6 @@
 import 'package:easyFinance/core/models/transaction.dart';
 import 'package:easyFinance/core/providers/user_controller_provider.dart';
+import 'package:easyFinance/widgets/nav_bar.dart';
 import 'package:easyFinance/widgets/recent_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,7 +18,7 @@ class DashboardPage extends ConsumerWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
         child: Container(
-          padding: const EdgeInsets.all(28.0),
+          padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

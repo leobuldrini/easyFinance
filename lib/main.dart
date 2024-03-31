@@ -1,6 +1,6 @@
+import 'package:easyFinance/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:easyFinance/screens/dashboard.dart';
 
 import 'misc/theme.dart';
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       debugShowCheckedModeBanner: false,
-      home: const DashboardPage(),
+      home: const Home(),
     );
   }
 }

@@ -49,5 +49,40 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       date: DateTime.now(),
       sector: 'Teste',
     ),
+    Transaction(
+      id: '1',
+      title: 'Teste',
+      amount: 100.00,
+      date: DateTime.now(),
+      sector: 'Teste',
+    ),
+    Transaction(
+      id: '2',
+      title: 'Teste',
+      amount: 100.00,
+      date: DateTime.now(),
+      sector: 'Teste',
+    ),
+    Transaction(
+      id: '3',
+      title: 'Teste',
+      amount: 100.00,
+      date: DateTime.now(),
+      sector: 'Teste',
+    ),
+    Transaction(
+      id: '4',
+      title: 'Teste',
+      amount: 100.00,
+      date: DateTime.now(),
+      sector: 'Teste',
+    ),
+    Transaction(
+      id: '5',
+      title: 'Teste',
+      amount: 100.00,
+      date: DateTime.now(),
+      sector: 'Teste',
+    ),
   ];
 });
