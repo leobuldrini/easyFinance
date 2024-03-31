@@ -1,25 +1,21 @@
+import 'package:easyFinance/core/models/transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class RecentTransactionTile extends StatelessWidget {
-  const RecentTransactionTile({required this.title, required this.subtitle, required this.amount, required this.date, super.key});
+  const RecentTransactionTile({required this.transaction, super.key});
 
-  final String title;
-  final String subtitle;
-  final double amount;
-  final DateTime date;
-
-
+  final Transaction transaction;
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('dd/MM/yyyy');
+    final formatter = DateFormat('dd MMMM yyyy', 'pt_BR');
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -31,7 +27,7 @@ class RecentTransactionTile extends StatelessWidget {
                 backgroundColor: Theme.of(context).colorScheme.onPrimary,
                 child: Icon(
                   Icons.attach_money_rounded,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.surface,
                 ),
               ),
               const SizedBox(width: 10),
@@ -39,18 +35,18 @@ class RecentTransactionTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    transaction.title,
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
-                    formatter.format(date),
+                    formatter.format(transaction.date),
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      fontSize: 14,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontSize: 13,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -59,9 +55,9 @@ class RecentTransactionTile extends StatelessWidget {
             ],
           ),
           Text(
-            'R\$$amount',
+            '${transaction.isIncome ? '+' : '-'}R\$${transaction.amount}',
             style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
+              color: transaction.isIncome ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.error,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),

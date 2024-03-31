@@ -10,13 +10,13 @@ class NavBar extends ConsumerWidget {
     return Container(
       height: 66,
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-      margin: const EdgeInsets.fromLTRB(8, 0, 8, 12),
+      margin: const EdgeInsets.fromLTRB(8, 12, 8, 12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Theme.of(context).colorScheme.surface.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.surface.withOpacity(0.2),
             offset: const Offset(0, 20),
             blurRadius: 20,
           ),
@@ -32,9 +32,9 @@ class NavBar extends ConsumerWidget {
             icon: Icon(
               Icons.home_rounded,
               size: 24,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
-            color: Theme.of(context).colorScheme.primary,
+            color: Theme.of(context).colorScheme.onPrimary,
           ),
           IconButton(
             onPressed: () {
@@ -43,17 +43,17 @@ class NavBar extends ConsumerWidget {
             icon: Icon(
               Icons.pie_chart_rounded,
               size: 24,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
           IconButton(
             onPressed: () {
-              // ref.read(currentPageProvider.notifier).state = 2;
+              ref.read(currentPageProvider.notifier).state = 2;
             },
             icon: Icon(
               Icons.compare_arrows_rounded,
               size: 24,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
           IconButton(
@@ -63,7 +63,7 @@ class NavBar extends ConsumerWidget {
             icon: Icon(
               Icons.person_rounded,
               size: 24,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
         ],

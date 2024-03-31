@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'misc/theme.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('pt_BR', null);
     return MaterialApp(
       title: 'EasyFinance - Finanças Pessoais',
       theme: lightTheme,

@@ -107,7 +107,7 @@ class _SectorPageState extends State<SectorPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
-        child: Container(
+        child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -182,14 +182,14 @@ class TransactionsPerSection extends StatelessWidget {
               sector,
               style: GoogleFonts.getFont(
                 'Montserrat',
-                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onPrimary),
+                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
               ),
             ),
             Text(
               '${sectors[sector]['percentage']}%',
               style: GoogleFonts.getFont(
                 'Montserrat',
-                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onPrimary),
+                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
               ),
             ),
           ],
@@ -204,7 +204,7 @@ class TransactionsPerSection extends StatelessWidget {
               transaction.title,
               style: GoogleFonts.getFont(
                 'Montserrat',
-                textStyle: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onPrimary),
+                textStyle: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface),
               ),
               textAlign: TextAlign.start,
             ),
@@ -218,7 +218,7 @@ class TransactionsPerSection extends StatelessWidget {
       padding: const EdgeInsets.all(28),
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(24),
       ),
       child: Column(

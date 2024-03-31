@@ -65,10 +65,7 @@ class DashboardPage extends ConsumerWidget {
                                     return Container(
                                       margin: const EdgeInsets.only(bottom: 10),
                                       child: RecentTransactionTile(
-                                        title: transactions[index].title,
-                                        subtitle: transactions[index].sector,
-                                        amount: transactions[index].amount,
-                                        date: transactions[index].date,
+                                        transaction: transactions[index],
                                       ),
                                     );
                                   },

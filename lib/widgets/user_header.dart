@@ -24,13 +24,13 @@ class _UserHeaderState extends State<UserHeader> {
             Icon(
               Icons.search_rounded,
               size: 24,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onBackground,
             ),
             const SizedBox(width: 20),
             Icon(
               Icons.notifications_none_rounded,
               size: 24,
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.onBackground,
             ),
             const SizedBox(width: 20),
             GestureDetector(
@@ -48,13 +48,13 @@ class _UserHeaderState extends State<UserHeader> {
                     child: Icon(
                       Icons.person_rounded,
                       size: 24,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: Theme.of(context).colorScheme.background,
                     ),
                   ),
                   Icon(
                     Icons.arrow_drop_down,
                     size: 24,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.onBackground,
                   ),
                 ],
               ),
