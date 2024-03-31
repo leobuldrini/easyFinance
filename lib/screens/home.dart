@@ -22,11 +22,11 @@ class Home extends ConsumerWidget {
     int currentPage = ref.watch(currentPageProvider);
     final loginState = ref.watch(loginControllerProvider);
     return Scaffold(
-      body: loginState is LoginState ? IndexedStack(
+      body: loginState is LoginStateSuccess ? IndexedStack(
         index: currentPage,
         children: screens,
       ) : const LoginScreen(),
-      bottomNavigationBar: loginState is LoginState ? const NavBar() : null,
+      bottomNavigationBar: loginState is LoginStateSuccess ? const NavBar() : null,
     );
   }
 }
