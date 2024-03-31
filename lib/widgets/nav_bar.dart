@@ -7,11 +7,10 @@ class NavBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    int currentPage = ref.watch(currentPageProvider);
     return Container(
       height: 66,
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
-      // margin: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      margin: const EdgeInsets.fromLTRB(8, 0, 8, 12),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface.withOpacity(0.8),
         borderRadius: BorderRadius.circular(24),
