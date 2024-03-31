@@ -13,7 +13,7 @@ class RecentTransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _formatter = DateFormat('dd/MM/yyyy');
+    final formatter = DateFormat('dd/MM/yyyy');
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
@@ -47,7 +47,7 @@ class RecentTransactionTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    _formatter.format(date),
+                    formatter.format(date),
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onPrimary,
                       fontSize: 14,

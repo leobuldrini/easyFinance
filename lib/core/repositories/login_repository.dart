@@ -1,4 +1,3 @@
-import 'package:easyFinance/core/models/user.dart';
 import 'package:easyFinance/core/services/login_service.dart';
 
 class LoginRepository {

@@ -34,7 +34,7 @@ class NavBar extends ConsumerWidget {
               size: 24,
               color: Theme.of(context).colorScheme.primary,
             ),
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: Theme.of(context).colorScheme.primary,
           ),
           IconButton(
             onPressed: () {
@@ -48,7 +48,7 @@ class NavBar extends ConsumerWidget {
           ),
           IconButton(
             onPressed: () {
-              ref.read(currentPageProvider.notifier).state = 2;
+              // ref.read(currentPageProvider.notifier).state = 2;
             },
             icon: Icon(
               Icons.compare_arrows_rounded,
@@ -58,7 +58,7 @@ class NavBar extends ConsumerWidget {
           ),
           IconButton(
             onPressed: () {
-              ref.read(currentPageProvider.notifier).state = 3;
+              // ref.read(currentPageProvider.notifier).state = 3;
             },
             icon: Icon(
               Icons.person_rounded,

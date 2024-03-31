@@ -24,6 +24,7 @@ class _SectorPageState extends State<SectorPage> {
         amount: 140,
         date: DateTime.now(),
         sector: 'Technology',
+        transactionType: TransactionType.outcome,
       ),
       Transaction(
         id: '1',
@@ -31,6 +32,7 @@ class _SectorPageState extends State<SectorPage> {
         amount: 75,
         date: DateTime.now(),
         sector: 'Finance',
+        transactionType: TransactionType.outcome,
       ),
       Transaction(
         id: '4',
@@ -38,6 +40,7 @@ class _SectorPageState extends State<SectorPage> {
         amount: 123,
         date: DateTime.now(),
         sector: 'Retail',
+        transactionType: TransactionType.outcome,
       ),
       Transaction(
         id: '5',
@@ -45,6 +48,7 @@ class _SectorPageState extends State<SectorPage> {
         amount: 130,
         date: DateTime.now(),
         sector: 'Finance',
+        transactionType: TransactionType.outcome,
       ),
       Transaction(
         id: '3',
@@ -52,6 +56,7 @@ class _SectorPageState extends State<SectorPage> {
         amount: 87,
         date: DateTime.now(),
         sector: 'Retail',
+        transactionType: TransactionType.outcome,
       ),
       Transaction(
         id: '2',
@@ -59,6 +64,7 @@ class _SectorPageState extends State<SectorPage> {
         amount: 74,
         date: DateTime.now(),
         sector: 'Finance',
+        transactionType: TransactionType.outcome,
       ),
       Transaction(
         id: '1',
@@ -66,6 +72,7 @@ class _SectorPageState extends State<SectorPage> {
         amount: 122,
         date: DateTime.now(),
         sector: 'Utilities',
+        transactionType: TransactionType.outcome,
       ),
       Transaction(
         id: '4',
@@ -73,6 +80,7 @@ class _SectorPageState extends State<SectorPage> {
         amount: 93,
         date: DateTime.now(),
         sector: 'Healthcare',
+        transactionType: TransactionType.outcome,
       ),
       Transaction(
         id: '5',
@@ -80,6 +88,7 @@ class _SectorPageState extends State<SectorPage> {
         amount: 55,
         date: DateTime.now(),
         sector: 'Technology',
+        transactionType: TransactionType.outcome,
       ),
       Transaction(
         id: '3',
@@ -87,6 +96,7 @@ class _SectorPageState extends State<SectorPage> {
         amount: 69,
         date: DateTime.now(),
         sector: 'Utilities',
+        transactionType: TransactionType.outcome,
       ),
     ];
     super.initState();
@@ -172,14 +182,14 @@ class TransactionsPerSection extends StatelessWidget {
               sector,
               style: GoogleFonts.getFont(
                 'Montserrat',
-                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onPrimary),
               ),
             ),
             Text(
               '${sectors[sector]['percentage']}%',
               style: GoogleFonts.getFont(
                 'Montserrat',
-                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onPrimary),
               ),
             ),
           ],
@@ -194,7 +204,7 @@ class TransactionsPerSection extends StatelessWidget {
               transaction.title,
               style: GoogleFonts.getFont(
                 'Montserrat',
-                textStyle: const TextStyle(fontSize: 13),
+                textStyle: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onPrimary),
               ),
               textAlign: TextAlign.start,
             ),
@@ -208,15 +218,8 @@ class TransactionsPerSection extends StatelessWidget {
       padding: const EdgeInsets.all(28),
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.surface.withOpacity(0.3),
-            offset: const Offset(0, 20),
-            blurRadius: 20,
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,11 +241,19 @@ class SectorPieChart extends StatefulWidget {
 class _SectorPieChartState extends State<SectorPieChart> {
   int? touchedIndex;
 
+  late Map<String, dynamic> data;
+
+  @override
+  void initState() {
+    data = fetchChartData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PieChart(
       // swapAnimationDuration: const Duration(seconds: 1),
-      swapAnimationCurve: Curves.easeInOut,
+      // swapAnimationCurve: Curves.easeInOut,
       PieChartData(
         pieTouchData: PieTouchData(
           touchCallback: (flTouchEvent, pieTouchResponse) {
@@ -250,23 +261,38 @@ class _SectorPieChartState extends State<SectorPieChart> {
               if (flTouchEvent is FlLongPressEnd || flTouchEvent is FlPanEndEvent) {
                 touchedIndex = -1;
               } else if (flTouchEvent is FlLongPressStart) {
-                // if (touchedIndex == pieTouchResponse?.touchedSection?.touchedSectionIndex) {
-                //   touchedIndex = -1;
-                //   print('uai meu fi');
-                // } else {
                 touchedIndex = pieTouchResponse?.touchedSection?.touchedSectionIndex;
-                // }
               }
             });
           },
           longPressDuration: const Duration(milliseconds: 10),
         ),
         centerSpaceRadius: 30,
-        sections: [
-          ...generateChartData(),
-        ],
+        sections: generateChartData(),
       ),
     );
+  }
+
+  Map<String, dynamic> fetchChartData() {
+    Map<String, dynamic> sectors = {};
+    for (Transaction transaction in widget.source) {
+      if(transaction.isIncome){
+        continue;
+      }
+      if (sectors.containsKey(transaction.sector)) {
+        sectors[transaction.sector]['amount'] += transaction.amount;
+        sectors[transaction.sector]['transactions'].add(transaction);
+        sectors[transaction.sector]['percentage'] =
+            (sectors[transaction.sector]['amount'] / widget.source.map((e) => e.amount).reduce((value, element) => value + element) * 100).toStringAsFixed(2);
+      } else {
+        sectors[transaction.sector] = {
+          'amount': transaction.amount,
+          'transactions': [transaction],
+          'percentage': (transaction.amount / widget.source.map((e) => e.amount).reduce((value, element) => value + element) * 100).toStringAsFixed(2),
+        };
+      }
+    }
+    return sectors;
   }
 
   List<PieChartSectionData> generateChartData() {
@@ -281,29 +307,14 @@ class _SectorPieChartState extends State<SectorPieChart> {
       const Color(0xFF191970), // Midnight blue
       const Color(0xFF40E0D0), // Turquoise
     ];
-    Map<String, dynamic> sectors = {};
-    for (Transaction transaction in widget.source) {
-      if (sectors.containsKey(transaction.sector)) {
-        sectors[transaction.sector]['amount'] += transaction.amount;
-        sectors[transaction.sector]['transactions'].add(transaction);
-        sectors[transaction.sector]['percentage'] =
-            (sectors[transaction.sector]['amount'] / widget.source.map((e) => e.amount).reduce((value, element) => value + element) * 100).toStringAsFixed(2);
-      } else {
-        sectors[transaction.sector] = {
-          'amount': transaction.amount,
-          'transactions': [transaction],
-          'percentage': (transaction.amount / widget.source.map((e) => e.amount).reduce((value, element) => value + element) * 100).toStringAsFixed(2),
-        };
-      }
-    }
-    List<PieChartSectionData> data = [];
+    List<PieChartSectionData> sectors = [];
     int index = 0;
-    for (String sector in sectors.keys) {
-      data.add(
+    for (String sector in data.keys) {
+      sectors.add(
         PieChartSectionData(
           color: colors[index],
-          value: sectors[sector]['amount'],
-          title: index != touchedIndex ? sector : '${sectors[sector]['percentage']}%',
+          value: data[sector]['amount'],
+          title: index != touchedIndex ? sector : '${data[sector]['percentage']}%',
           radius: index == touchedIndex ? 120 : 100,
           titleStyle: GoogleFonts.getFont(
             'Montserrat',
@@ -313,6 +324,6 @@ class _SectorPieChartState extends State<SectorPieChart> {
       );
       index++;
     }
-    return data;
+    return sectors;
   }
 }

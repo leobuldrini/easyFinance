@@ -1,6 +1,5 @@
 import 'package:easyFinance/core/models/transaction.dart';
 import 'package:easyFinance/core/providers/user_controller_provider.dart';
-import 'package:easyFinance/widgets/nav_bar.dart';
 import 'package:easyFinance/widgets/recent_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

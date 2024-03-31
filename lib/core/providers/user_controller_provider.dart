@@ -20,6 +20,7 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       amount: 100.00,
       date: DateTime.now(),
       sector: 'Teste',
+      transactionType: TransactionType.income,
     ),
     Transaction(
       id: '2',
@@ -27,6 +28,7 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       amount: 100.00,
       date: DateTime.now(),
       sector: 'Teste',
+      transactionType: TransactionType.income,
     ),
     Transaction(
       id: '3',
@@ -34,6 +36,7 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       amount: 100.00,
       date: DateTime.now(),
       sector: 'Teste',
+      transactionType: TransactionType.outcome,
     ),
     Transaction(
       id: '4',
@@ -41,6 +44,7 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       amount: 100.00,
       date: DateTime.now(),
       sector: 'Teste',
+      transactionType: TransactionType.outcome,
     ),
     Transaction(
       id: '5',
@@ -48,6 +52,7 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       amount: 100.00,
       date: DateTime.now(),
       sector: 'Teste',
+      transactionType: TransactionType.outcome,
     ),
     Transaction(
       id: '1',
@@ -55,6 +60,7 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       amount: 100.00,
       date: DateTime.now(),
       sector: 'Teste',
+      transactionType: TransactionType.outcome,
     ),
     Transaction(
       id: '2',
@@ -62,6 +68,7 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       amount: 100.00,
       date: DateTime.now(),
       sector: 'Teste',
+      transactionType: TransactionType.income,
     ),
     Transaction(
       id: '3',
@@ -69,6 +76,7 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       amount: 100.00,
       date: DateTime.now(),
       sector: 'Teste',
+      transactionType: TransactionType.outcome,
     ),
     Transaction(
       id: '4',
@@ -76,6 +84,7 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       amount: 100.00,
       date: DateTime.now(),
       sector: 'Teste',
+      transactionType: TransactionType.income,
     ),
     Transaction(
       id: '5',
@@ -83,6 +92,7 @@ final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transac
       amount: 100.00,
       date: DateTime.now(),
       sector: 'Teste',
+      transactionType: TransactionType.income,
     ),
   ];
 });
