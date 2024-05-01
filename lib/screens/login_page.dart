@@ -21,13 +21,15 @@ class LoginScreen extends StatelessWidget {
               children: [
                 SizedBox(
                   height: 200,
-                  child: Lottie.network('https://lottie.host/47684b35-7638-4148-8782-80a7bc9e7fab/xNg4fR6Prv.json'),
+                  child: Lottie.network(
+                      'https://lottie.host/47684b35-7638-4148-8782-80a7bc9e7fab/xNg4fR6Prv.json'),
                 ),
                 Text(
                   'EasyFinance',
                   style: GoogleFonts.getFont(
                     'Montserrat',
-                    textStyle: const TextStyle(fontSize: 56, fontWeight: FontWeight.w800),
+                    textStyle: const TextStyle(
+                        fontSize: 48, fontWeight: FontWeight.w800),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -68,7 +70,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             'Username',
             style: GoogleFonts.getFont(
               'Montserrat',
-              textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+              textStyle:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
             ),
           ),
           TextField(
@@ -77,7 +80,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             onSubmitted: (username) {
               if (username != '') {
                 FocusScope.of(context).requestFocus(passwordFocusNode);
-              }else{
+              } else {
                 FocusScope.of(context).requestFocus(usernameFocusNode);
               }
             },
@@ -89,7 +92,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             'Password',
             style: GoogleFonts.getFont(
               'Montserrat',
-              textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+              textStyle:
+                  const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
             ),
           ),
           TextField(
@@ -98,7 +102,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             obscureText: true,
             onSubmitted: (password) {
               if (password != '') {
-                ref.read(loginControllerProvider.notifier).login(usernameController.text, passwordController.text);
+                ref
+                    .read(loginControllerProvider.notifier)
+                    .login(usernameController.text, passwordController.text);
               } else {
                 FocusScope.of(context).requestFocus(passwordFocusNode);
               }
@@ -109,24 +115,59 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           ),
           TextButton(
             onPressed: () {
-              if (usernameController.text != '' && passwordController.text != '') {
-                ref.read(loginControllerProvider.notifier).login(usernameController.text, passwordController.text);
+              if (usernameController.text != '' &&
+                  passwordController.text != '') {
+                ref
+                    .read(loginControllerProvider.notifier)
+                    .login(usernameController.text, passwordController.text);
               }
             },
             style: TextButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12.0)),
               ),
               fixedSize: const Size(200, 60),
             ),
-            child: loginState is LoginStateLoading ? CircularProgressIndicator(color: Theme.of(context).colorScheme.primary,) : Text(
-              'Login',
-              style: GoogleFonts.getFont(
-                'Montserrat',
-                textStyle: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+            child: loginState is LoginStateLoading
+                ? CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  )
+                : Text(
+                    'Login',
+                    style: GoogleFonts.getFont(
+                      'Montserrat',
+                      textStyle: TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onPrimary),
+                    ),
+                  ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/signUp');
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12.0)),
               ),
+              fixedSize: const Size(250, 60),
             ),
+            child: loginState is LoginStateLoading
+                ? CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  )
+                : Text(
+                    'Don\'t have an account? Sign Up',
+                    style: GoogleFonts.getFont(
+                      'Montserrat',
+                      textStyle: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSecondary),
+                    ),
+                  ),
           ),
         ],
       ),

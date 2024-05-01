@@ -1,9 +1,7 @@
 import 'package:easyFinance/core/models/transaction.dart';
 import 'package:easyFinance/core/providers/transaction_controller_provider.dart';
 import 'package:easyFinance/widgets/user_header.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -151,7 +149,6 @@ class MonthlyIncome extends StatelessWidget {
   Widget build(BuildContext context) {
     double balance = 0.0;
     List<Transaction> incomes = transactions.where((element) => element.isIncome).toList();
-    print(incomes.length);
     for (var transaction in incomes) {
       balance += transaction.amount;
     }
@@ -234,7 +231,6 @@ class MonthlyOutcome extends StatelessWidget {
   Widget build(BuildContext context) {
     double balance = 0.0;
     List<Transaction> outcomes = transactions.where((element) => element.isOutcome).toList();
-    print(outcomes.length);
     for (var transaction in outcomes) {
       balance += transaction.amount;
     }

@@ -1,14 +1,17 @@
+import 'package:easyFinance/core/providers/login_controller_provider.dart';
+import 'package:easyFinance/core/providers/supabase_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:lottie/lottie.dart';
 
-class UserHeader extends StatefulWidget {
+class UserHeader extends ConsumerStatefulWidget {
   const UserHeader({super.key});
 
   @override
-  State<UserHeader> createState() => _UserHeaderState();
+  ConsumerState<UserHeader> createState() => _UserHeaderState();
 }
 
-class _UserHeaderState extends State<UserHeader> {
+class _UserHeaderState extends ConsumerState<UserHeader> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -35,10 +38,10 @@ class _UserHeaderState extends State<UserHeader> {
             const SizedBox(width: 20),
             GestureDetector(
               onTap: () {
-                //print('User profile');
+                print(ref.read(supabaseClientProvider.notifier).state?.auth.currentUser?.email);
               },
               onLongPress: () {
-                //print(User profile 2');
+                ref.read(loginControllerProvider.notifier).signOut();
               },
               child: Row(
                 children: [
