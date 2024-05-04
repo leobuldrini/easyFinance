@@ -1,90 +1,17 @@
 import 'package:easyFinance/core/models/transaction.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../providers/supabase_provider.dart';
+
 class TransactionsService {
+  final Ref _ref;
   Future<List<Transaction>> getTransactions() async {
-    // Fetch transactions from the API
-    return [Transaction(
-      id: '1',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.income,
-    ),
-      Transaction(
-        id: '2',
-        title: 'Teste',
-        amount: 100.00,
-        date: DateTime.now(),
-        sector: 'Teste',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '3',
-        title: 'Teste',
-        amount: 100.00,
-        date: DateTime.now(),
-        sector: 'Teste',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '4',
-        title: 'Teste',
-        amount: 100.00,
-        date: DateTime.now(),
-        sector: 'Teste',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '5',
-        title: 'Teste',
-        amount: 100.00,
-        date: DateTime.now(),
-        sector: 'Teste',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '1',
-        title: 'Teste',
-        amount: 100.00,
-        date: DateTime.now(),
-        sector: 'Teste',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '2',
-        title: 'Teste',
-        amount: 100.00,
-        date: DateTime.now(),
-        sector: 'Teste',
-        transactionType: TransactionType.income,
-      ),
-      Transaction(
-        id: '3',
-        title: 'Teste',
-        amount: 100.00,
-        date: DateTime.now(),
-        sector: 'Teste',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '4',
-        title: 'Teste',
-        amount: 100.00,
-        date: DateTime.now(),
-        sector: 'Teste',
-        transactionType: TransactionType.income,
-      ),
-      Transaction(
-        id: '5',
-        title: 'Teste',
-        amount: 100.00,
-        date: DateTime.now(),
-        sector: 'Teste',
-        transactionType: TransactionType.income,
-      )];
+    final supabaseClient = _ref.read(supabaseClientProvider);
+    final response = await supabaseClient!.from('transactions').select();
+    return response.map((e) => Transaction.fromJson(e)).toList();
   }
+
+  TransactionsService(this._ref);
 }
 
-final transactionsServiceProvider = Provider<TransactionsService>((ref) => TransactionsService());
+final transactionsServiceProvider = Provider<TransactionsService>((ref) => TransactionsService(ref));

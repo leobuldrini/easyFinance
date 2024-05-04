@@ -55,7 +55,7 @@ class RecentTransactionTile extends StatelessWidget {
             ],
           ),
           Text(
-            '${transaction.isIncome ? '+' : '-'}R\$${transaction.amount}',
+            '${transaction.isIncome ? '+' : '-'}R\$${transaction.amount.toStringAsFixed(2)}',
             style: TextStyle(
               color: transaction.isIncome ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.error,
               fontSize: 16,

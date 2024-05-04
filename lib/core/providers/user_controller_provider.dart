@@ -1,5 +1,6 @@
 import 'package:easyFinance/core/models/transaction.dart';
 import 'package:easyFinance/core/models/user.dart';
+import 'package:easyFinance/core/repositories/transactions_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final userProvider = StateProvider<User>((ref) {
@@ -12,87 +13,5 @@ final userProvider = StateProvider<User>((ref) {
 });
 
 final recentTransactionsFutureProvider = FutureProvider.autoDispose<List<Transaction>>((ref) async {
-  await Future.delayed(const Duration(seconds: 1));
-  return [
-    Transaction(
-      id: '1',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.income,
-    ),
-    Transaction(
-      id: '2',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.income,
-    ),
-    Transaction(
-      id: '3',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.outcome,
-    ),
-    Transaction(
-      id: '4',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.outcome,
-    ),
-    Transaction(
-      id: '5',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.outcome,
-    ),
-    Transaction(
-      id: '1',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.outcome,
-    ),
-    Transaction(
-      id: '2',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.income,
-    ),
-    Transaction(
-      id: '3',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.outcome,
-    ),
-    Transaction(
-      id: '4',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.income,
-    ),
-    Transaction(
-      id: '5',
-      title: 'Teste',
-      amount: 100.00,
-      date: DateTime.now(),
-      sector: 'Teste',
-      transactionType: TransactionType.income,
-    ),
-  ];
+  return ref.read(transactionsRepositoryProvider).getTransactions();
 });

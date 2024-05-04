@@ -15,6 +15,17 @@ class Transaction {
     required this.transactionType,
   });
 
+  factory Transaction.fromJson(Map<String, dynamic> json) {
+    return Transaction(
+      id: json['id'].toString(),
+      title: json['title'],
+      amount: double.parse(json['value'].toString()),
+      date: DateTime.parse(json['created_at']),
+      sector: json['category'],
+      transactionType: json['income'] == true ? TransactionType.income : TransactionType.outcome,
+    );
+  }
+
   bool get isIncome {
     return transactionType.isIncome;
   }
