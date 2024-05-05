@@ -1,109 +1,30 @@
 import 'package:easyFinance/core/models/transaction.dart';
+import 'package:easyFinance/core/providers/user_controller_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../widgets/user_header.dart';
 
-class SectorPage extends StatefulWidget {
+class SectorPage extends ConsumerStatefulWidget {
   const SectorPage({super.key});
 
   @override
-  State<SectorPage> createState() => _SectorPageState();
+  ConsumerState<SectorPage> createState() => _SectorPageState();
 }
 
-class _SectorPageState extends State<SectorPage> {
+class _SectorPageState extends ConsumerState<SectorPage> {
   List<Transaction>? source;
 
   @override
   void initState() {
-    source = [
-      Transaction(
-        id: '2',
-        title: 'Teste 1',
-        amount: 140,
-        date: DateTime.now(),
-        sector: 'Technology',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '1',
-        title: 'Teste 2',
-        amount: 75,
-        date: DateTime.now(),
-        sector: 'Finance',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '4',
-        title: 'Teste 3',
-        amount: 123,
-        date: DateTime.now(),
-        sector: 'Retail',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '5',
-        title: 'Teste 4',
-        amount: 130,
-        date: DateTime.now(),
-        sector: 'Finance',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '3',
-        title: 'Teste 5',
-        amount: 87,
-        date: DateTime.now(),
-        sector: 'Retail',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '2',
-        title: 'Teste 6',
-        amount: 74,
-        date: DateTime.now(),
-        sector: 'Finance',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '1',
-        title: 'Teste 7',
-        amount: 122,
-        date: DateTime.now(),
-        sector: 'Utilities',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '4',
-        title: 'Teste 8',
-        amount: 93,
-        date: DateTime.now(),
-        sector: 'Healthcare',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '5',
-        title: 'Teste 9',
-        amount: 55,
-        date: DateTime.now(),
-        sector: 'Technology',
-        transactionType: TransactionType.outcome,
-      ),
-      Transaction(
-        id: '3',
-        title: 'Teste 10',
-        amount: 69,
-        date: DateTime.now(),
-        sector: 'Utilities',
-        transactionType: TransactionType.outcome,
-      ),
-    ];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    AsyncValue transactions = ref.watch(recentTransactionsFutureProvider);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
@@ -124,7 +45,8 @@ class _SectorPageState extends State<SectorPage> {
                         'sectors.',
                         style: GoogleFonts.getFont(
                           'Montserrat',
-                          textStyle: const TextStyle(fontSize: 56, fontWeight: FontWeight.w600),
+                          textStyle: const TextStyle(
+                              fontSize: 56, fontWeight: FontWeight.w600),
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -133,11 +55,39 @@ class _SectorPageState extends State<SectorPage> {
                         child: SizedBox(
                           height: 300,
                           width: 300,
-                          child: SectorPieChart(source: source!),
+                          child: transactions.when(
+                            data: (transactions) {
+                          final List<Transaction> transactionsOutcome = [];
+
+                          for(Transaction t in transactions){
+                          if(t.isOutcome){
+                            transactionsOutcome.add(t);
+                          }
+                        }
+                              return SectorPieChart(source: transactionsOutcome);
+                            },
+                            loading: () => const Center(
+                                child: CircularProgressIndicator()),
+                            error: (error, stack) => Text('Error: $error'),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 10),
-                      TransactionsPerSection(source: source!),
+                      transactions.when(
+                        data: (transactions) {
+                          final List<Transaction> transactionsOutcome = [];
+
+                          for(Transaction t in transactions){
+                          if(t.isOutcome){
+                            transactionsOutcome.add(t);
+                          }
+                        }
+                          return TransactionsPerSection(source: transactionsOutcome);
+                        },
+                        loading: () =>
+                            const Center(child: CircularProgressIndicator()),
+                        error: (error, stack) => Text('Error: $error'),
+                      ),
                     ],
                   ),
                 ),
@@ -160,16 +110,29 @@ class TransactionsPerSection extends StatelessWidget {
     List<Widget> columnItems = [];
     Map<String, dynamic> sectors = {};
     for (Transaction transaction in source) {
+      if (transaction.isIncome) {
+        continue;
+      }
       if (sectors.containsKey(transaction.sector)) {
         sectors[transaction.sector]['amount'] += transaction.amount;
         sectors[transaction.sector]['transactions'].add(transaction);
-        sectors[transaction.sector]['percentage'] =
-            (sectors[transaction.sector]['amount'] / source.map((e) => e.amount).reduce((value, element) => value + element) * 100).toStringAsFixed(2);
+        sectors[transaction.sector]['percentage'] = (sectors[transaction.sector]
+                    ['amount'] /
+                source
+                    .map((e) => e.amount)
+                    .reduce((value, element) => value + element) *
+                100)
+            .toStringAsFixed(2);
       } else {
         sectors[transaction.sector] = {
           'amount': transaction.amount,
           'transactions': [transaction],
-          'percentage': (transaction.amount / source.map((e) => e.amount).reduce((value, element) => value + element) * 100).toStringAsFixed(2),
+          'percentage': (transaction.amount /
+                  source
+                      .map((e) => e.amount)
+                      .reduce((value, element) => value + element) *
+                  100)
+              .toStringAsFixed(2),
         };
       }
     }
@@ -182,14 +145,20 @@ class TransactionsPerSection extends StatelessWidget {
               sector,
               style: GoogleFonts.getFont(
                 'Montserrat',
-                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
+                textStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface),
               ),
             ),
             Text(
               '${sectors[sector]['percentage']}%',
               style: GoogleFonts.getFont(
                 'Montserrat',
-                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
+                textStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface),
               ),
             ),
           ],
@@ -204,7 +173,9 @@ class TransactionsPerSection extends StatelessWidget {
               transaction.title,
               style: GoogleFonts.getFont(
                 'Montserrat',
-                textStyle: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface),
+                textStyle: TextStyle(
+                    fontSize: 13,
+                    color: Theme.of(context).colorScheme.onSurface),
               ),
               textAlign: TextAlign.start,
             ),
@@ -258,10 +229,12 @@ class _SectorPieChartState extends State<SectorPieChart> {
         pieTouchData: PieTouchData(
           touchCallback: (flTouchEvent, pieTouchResponse) {
             setState(() {
-              if (flTouchEvent is FlLongPressEnd || flTouchEvent is FlPanEndEvent) {
+              if (flTouchEvent is FlLongPressEnd ||
+                  flTouchEvent is FlPanEndEvent) {
                 touchedIndex = -1;
               } else if (flTouchEvent is FlLongPressStart) {
-                touchedIndex = pieTouchResponse?.touchedSection?.touchedSectionIndex;
+                touchedIndex =
+                    pieTouchResponse?.touchedSection?.touchedSectionIndex;
               }
             });
           },
@@ -276,19 +249,29 @@ class _SectorPieChartState extends State<SectorPieChart> {
   Map<String, dynamic> fetchChartData() {
     Map<String, dynamic> sectors = {};
     for (Transaction transaction in widget.source) {
-      if(transaction.isIncome){
+      if (transaction.isIncome) {
         continue;
       }
       if (sectors.containsKey(transaction.sector)) {
         sectors[transaction.sector]['amount'] += transaction.amount;
         sectors[transaction.sector]['transactions'].add(transaction);
-        sectors[transaction.sector]['percentage'] =
-            (sectors[transaction.sector]['amount'] / widget.source.map((e) => e.amount).reduce((value, element) => value + element) * 100).toStringAsFixed(2);
+        sectors[transaction.sector]['percentage'] = (sectors[transaction.sector]
+                    ['amount'] /
+                widget.source
+                    .map((e) => e.amount)
+                    .reduce((value, element) => value + element) *
+                100)
+            .toStringAsFixed(2);
       } else {
         sectors[transaction.sector] = {
           'amount': transaction.amount,
           'transactions': [transaction],
-          'percentage': (transaction.amount / widget.source.map((e) => e.amount).reduce((value, element) => value + element) * 100).toStringAsFixed(2),
+          'percentage': (transaction.amount /
+                  widget.source
+                      .map((e) => e.amount)
+                      .reduce((value, element) => value + element) *
+                  100)
+              .toStringAsFixed(2),
         };
       }
     }
@@ -314,7 +297,8 @@ class _SectorPieChartState extends State<SectorPieChart> {
         PieChartSectionData(
           color: colors[index],
           value: data[sector]['amount'],
-          title: index != touchedIndex ? sector : '${data[sector]['percentage']}%',
+          title:
+              index != touchedIndex ? sector : '${data[sector]['percentage']}%',
           radius: index == touchedIndex ? 120 : 100,
           titleStyle: GoogleFonts.getFont(
             'Montserrat',

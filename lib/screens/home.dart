@@ -23,12 +23,6 @@ class Home extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(supabaseClientProvider.notifier).state =
           Supabase.instance.client;
-      print(ref
-          .read(supabaseClientProvider.notifier)
-          .state
-          ?.auth
-          .currentSession
-          ?.accessToken);
       ref.read(loginControllerProvider.notifier).retrieveSession();
       logged = true;
     });

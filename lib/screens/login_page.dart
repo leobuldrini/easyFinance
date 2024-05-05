@@ -117,12 +117,10 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             onPressed: () {
               if (usernameController.text != '' &&
                   passwordController.text != '') {
-                print('b');
                 ref
                     .read(loginControllerProvider.notifier)
                     .login(usernameController.text, passwordController.text);
               } else {
-                print('a');
               }
             },
             style: TextButton.styleFrom(
