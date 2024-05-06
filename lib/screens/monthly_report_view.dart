@@ -71,7 +71,11 @@ class _MonthlyReportBodyState extends ConsumerState<MonthlyReportBody> {
 
   void onScreenStart() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      transactions = await ref.read(transactionControllerProvider.notifier).getTransactions();
+      DateTime now = DateTime.now();
+      await ref.read(transactionControllerProvider.notifier).getTransactions()
+      .then((value) => {
+        transactions = value.where((element) => element.date.month == now.month).toList()
+      });
       setState(() {});
     });
   }

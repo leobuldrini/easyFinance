@@ -10,6 +10,10 @@ class TransactionsRepository {
   Future<List<Transaction>> getTransactions() async {
     return await _transactionsService.getTransactions();
   }
+
+  Future<bool> addTransaction(double value, bool income, String category, String title) async {
+    return await _transactionsService.addTransaction(value, income, category, title);
+  }
 }
 
 final transactionsRepositoryProvider = Provider<TransactionsRepository>((ref) {

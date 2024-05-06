@@ -1,4 +1,5 @@
 import 'package:easyFinance/core/models/transaction.dart';
+import 'package:easyFinance/core/providers/transaction_controller_provider.dart';
 import 'package:easyFinance/core/providers/user_controller_provider.dart';
 import 'package:easyFinance/widgets/recent_transaction.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ class DashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    double userBalance = ref.read(userProvider).balance;
     AsyncValue recentTransactions = ref.watch(recentTransactionsFutureProvider);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -39,13 +41,22 @@ class DashboardPage extends ConsumerWidget {
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 10),
-                      Text(
-                        'R\$${ref.read(userProvider).balance.toString()}',
-                        style: GoogleFonts.getFont(
-                          'Montserrat',
-                          textStyle: const TextStyle(fontSize: 34, fontWeight: FontWeight.w600),
-                        ),
-                        textAlign: TextAlign.start,
+                      recentTransactions.when(
+                        data: (data) {
+                          List<Transaction> transactions = data;
+                          for (int i = 0; i < transactions.length; i++) {
+                            userBalance += (transactions[i].amount * (transactions[i].isIncome ? 1 : -1));
+                          }
+                          return Text(
+                            'R\$ ${userBalance.toStringAsFixed(2)}',
+                            style: GoogleFonts.getFont(
+                              'Montserrat',
+                              textStyle: const TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
+                            ),
+                          );
+                        },
+                        error: (error, stack) => const Text('Failed to load Total Balance'),
+                        loading: () => const CircularProgressIndicator(),
                       ),
                       const Text('Total Balance', style: TextStyle(fontSize: 16, color: Colors.grey)),
                       const SizedBox(height: 20),
@@ -75,6 +86,89 @@ class DashboardPage extends ConsumerWidget {
                           child: CircularProgressIndicator(),
                         ),
                         error: (error, stack) => Text('Error: $error'),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
+                              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    TextEditingController valueController = TextEditingController();
+                                    TextEditingController categoryController = TextEditingController();
+                                    TextEditingController titleController = TextEditingController();
+                                    valueController.text = '0';
+                                    categoryController.text = '';
+                                    titleController.text = '';
+
+                                    return AlertDialog(
+                                      title: const Text('Adicionar transação'),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextField(
+                                            controller: valueController,
+                                            decoration: const InputDecoration(
+                                              labelText: 'Valor',
+                                            ),
+                                          ),
+                                          TextField(
+                                            controller: categoryController,
+                                            decoration: const InputDecoration(
+                                              labelText: 'Categoria',
+                                            ),
+                                          ),
+                                          TextField(
+                                            controller: titleController,
+                                            decoration: const InputDecoration(
+                                              labelText: 'Título',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Cancelar'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            double value = double.parse(valueController.text);
+                                            bool income = value > 0;
+                                            if (!income) {
+                                              value = value.abs();
+                                            }
+                                            ref.read(transactionControllerProvider.notifier).addTransaction(value, income, categoryController.text, titleController.text)
+                                            .then((value) {
+                                              ref.refresh(recentTransactionsFutureProvider);
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text('Adicionar'),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                              );
+                            },
+                            child: const Text(
+                                'Adicionar transação',
+                                style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

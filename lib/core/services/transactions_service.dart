@@ -12,6 +12,30 @@ class TransactionsService {
   }
 
   TransactionsService(this._ref);
+
+  Future<bool> addTransaction(double value, bool income, String category, String title) async {
+    late final response;
+    try {
+      final supabaseClient = _ref.read(supabaseClientProvider);
+      final account = await supabaseClient?.from('accounts').select();
+      final accountId = account?[0]['id'];
+      response = await supabaseClient!.from('transactions').insert(
+          {
+            'value': value,
+            'created_at': DateTime.now().toIso8601String(),
+            'income': income,
+            'account_id': (accountId ?? 3),
+            'category': category,
+            'title': title,
+          }
+      );
+    } catch (e) {
+      print('error: $e');
+      return false;
+    }
+    print('response: $response');
+    return response.error == null;
+  }
 }
 
 final transactionsServiceProvider = Provider<TransactionsService>((ref) => TransactionsService(ref));

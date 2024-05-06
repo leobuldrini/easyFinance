@@ -54,9 +54,9 @@ class LoginForm extends ConsumerStatefulWidget {
 }
 
 class _LoginFormState extends ConsumerState<LoginForm> {
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  FocusNode usernameFocusNode = FocusNode();
+  FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
 
   @override
@@ -67,7 +67,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       child: Column(
         children: [
           Text(
-            'Username',
+            'Email',
             style: GoogleFonts.getFont(
               'Montserrat',
               textStyle:
@@ -75,13 +75,13 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             ),
           ),
           TextField(
-            controller: usernameController,
-            focusNode: usernameFocusNode,
+            controller: emailController,
+            focusNode: emailFocusNode,
             onSubmitted: (username) {
               if (username != '') {
                 FocusScope.of(context).requestFocus(passwordFocusNode);
               } else {
-                FocusScope.of(context).requestFocus(usernameFocusNode);
+                FocusScope.of(context).requestFocus(emailFocusNode);
               }
             },
           ),
@@ -104,7 +104,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               if (password != '') {
                 ref
                     .read(loginControllerProvider.notifier)
-                    .login(usernameController.text, passwordController.text);
+                    .login(emailController.text, passwordController.text);
               } else {
                 FocusScope.of(context).requestFocus(passwordFocusNode);
               }
@@ -115,12 +115,13 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           ),
           TextButton(
             onPressed: () {
-              if (usernameController.text != '' &&
+              if (emailController.text != '' &&
                   passwordController.text != '') {
                 ref
                     .read(loginControllerProvider.notifier)
-                    .login(usernameController.text, passwordController.text);
+                    .login(emailController.text, passwordController.text);
               } else {
+
               }
             },
             style: TextButton.styleFrom(
@@ -163,6 +164,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                   )
                 : Text(
                     'Don\'t have an account? Sign Up',
+                    textAlign: TextAlign.center,
                     style: GoogleFonts.getFont(
                       'Montserrat',
                       textStyle: TextStyle(

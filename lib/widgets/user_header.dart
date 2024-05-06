@@ -36,6 +36,7 @@ class _UserHeaderState extends ConsumerState<UserHeader> {
               color: Theme.of(context).colorScheme.onBackground,
             ),
             const SizedBox(width: 20),
+            // TODO : dropdown menu
             GestureDetector(
               onTap: () {
                 print(ref.read(supabaseClientProvider.notifier).state?.auth.currentUser?.email);

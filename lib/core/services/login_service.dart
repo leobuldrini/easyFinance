@@ -11,7 +11,8 @@ class LoginService {
     try {
       response = await supabaseClient.auth
           .signInWithPassword(password: password, email: email);
-    } on AuthException {
+    } on AuthException catch (e){
+      print("error: ${e.message}");
       return false;
     }
     return response.user != null;
@@ -27,7 +28,8 @@ class LoginService {
         emailRedirectTo:
             kIsWeb ? null : 'io.supabase.flutterquickstart://login-callback/',
       );
-    } on AuthException {
+    } on AuthException catch (e){
+      print("error: ${e.message}");
       return false;
     }
 

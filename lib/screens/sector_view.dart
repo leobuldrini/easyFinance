@@ -15,7 +15,7 @@ class SectorPage extends ConsumerStatefulWidget {
 }
 
 class _SectorPageState extends ConsumerState<SectorPage> {
-  List<Transaction>? source;
+  List<Widget> source = [const SizedBox.shrink()];
 
   @override
   void initState() {
@@ -57,17 +57,20 @@ class _SectorPageState extends ConsumerState<SectorPage> {
                           width: 300,
                           child: transactions.when(
                             data: (transactions) {
-                          final List<Transaction> transactionsOutcome = [];
-
-                          for(Transaction t in transactions){
-                          if(t.isOutcome){
-                            transactionsOutcome.add(t);
-                          }
-                        }
-                              return SectorPieChart(source: transactionsOutcome);
-                            },
-                            loading: () => const Center(
-                                child: CircularProgressIndicator()),
+                              final List<Transaction> transactionsOutcome = [];
+                              setState(() {
+                                transactionsOutcome.clear();
+                                for(Transaction t in transactions){
+                                  if(t.isOutcome){
+                                    transactionsOutcome.add(t);
+                                  }
+                                }
+                                source.add(SectorPieChart(source: transactionsOutcome));
+                              });
+                            return source.last;
+                          },
+                          loading: () => const Center(
+                            child: CircularProgressIndicator()),
                             error: (error, stack) => Text('Error: $error'),
                           ),
                         ),
@@ -184,7 +187,9 @@ class TransactionsPerSection extends StatelessWidget {
       }
       columnItems.add(const SizedBox(height: 20));
     }
-    columnItems.removeLast();
+    if (columnItems.isNotEmpty) {
+      columnItems.removeLast();
+    }
     return Container(
       padding: const EdgeInsets.all(28),
       margin: const EdgeInsets.all(8),

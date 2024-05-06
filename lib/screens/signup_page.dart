@@ -54,9 +54,9 @@ class _SignUpForm extends ConsumerStatefulWidget {
 }
 
 class __SignUpFormState extends ConsumerState<_SignUpForm> {
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  FocusNode usernameFocusNode = FocusNode();
+  FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
 
   
@@ -79,9 +79,9 @@ class __SignUpFormState extends ConsumerState<_SignUpForm> {
 
   @override
   void dispose() {
-    usernameController.dispose();
+    emailController.dispose();
     passwordController.dispose();
-    usernameFocusNode.dispose();
+    emailFocusNode.dispose();
     passwordFocusNode.dispose();
     _authStateSubscription.cancel();
     super.dispose();
@@ -94,7 +94,7 @@ class __SignUpFormState extends ConsumerState<_SignUpForm> {
         child: Column(
           children: [
             Text(
-              'Username',
+              'Email',
               style: GoogleFonts.getFont(
                 'Montserrat',
                 textStyle:
@@ -102,13 +102,13 @@ class __SignUpFormState extends ConsumerState<_SignUpForm> {
               ),
             ),
             TextField(
-              controller: usernameController,
-              focusNode: usernameFocusNode,
+              controller: emailController,
+              focusNode: emailFocusNode,
               onSubmitted: (username) {
                 if (username != '') {
                   FocusScope.of(context).requestFocus(passwordFocusNode);
                 } else {
-                  FocusScope.of(context).requestFocus(usernameFocusNode);
+                  FocusScope.of(context).requestFocus(emailFocusNode);
                 }
               },
             ),
@@ -131,11 +131,80 @@ class __SignUpFormState extends ConsumerState<_SignUpForm> {
                 if (password != '') {
                   ref
                       .read(loginControllerProvider.notifier)
-                      .signUp(usernameController.text, passwordController.text);
+                      .signUp(emailController.text, passwordController.text);
                 } else {
                   FocusScope.of(context).requestFocus(passwordFocusNode);
                 }
               },
+            ),
+            const SizedBox(height: 15),
+            TextButton(
+              onPressed: () {
+                if (emailController.text != '' &&
+                    passwordController.text != '') {
+                  ref
+                      .read(loginControllerProvider.notifier)
+                      .signUp(emailController.text, passwordController.text);
+                }
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                    Theme.of(context).colorScheme.primary),
+                padding: MaterialStateProperty.all(
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              child: Text(
+                'Sign Up',
+                style: GoogleFonts.getFont(
+                  'Montserrat',
+                  textStyle: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Already have an account?',
+                  style: GoogleFonts.getFont(
+                    'Montserrat',
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pushReplacementNamed('/');
+                    }
+                  },
+                  child: Text(
+                    'Login',
+                    style: GoogleFonts.getFont(
+                      'Montserrat',
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ));

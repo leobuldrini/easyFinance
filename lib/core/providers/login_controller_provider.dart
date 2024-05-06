@@ -18,6 +18,8 @@ class LoginController extends StateNotifier<LoginState> {
           : const LoginStateError('invalid login');
     } catch (e) {
       state = const LoginStateError('?');
+    } finally {
+      print('login status: $state');
     }
   }
 

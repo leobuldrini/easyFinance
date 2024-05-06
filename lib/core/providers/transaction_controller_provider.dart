@@ -20,6 +20,17 @@ class TransactionController extends StateNotifier<TransactionState> {
     }
     return result;
   }
+
+  Future<void> addTransaction(double value, bool income, String category, String title) async {
+    state = const TransactionStateLoading();
+    try {
+      await ref.read(transactionsRepositoryProvider).addTransaction(value, income, category, title);
+      state = const TransactionStateSuccess();
+    } catch (e) {
+      state = TransactionStateError(e.toString());
+    }
+
+  }
 }
 
 final transactionControllerProvider = StateNotifierProvider<TransactionController, TransactionState>((ref) {
