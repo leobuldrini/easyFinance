@@ -8,7 +8,11 @@ class TransactionsService {
   Future<List<Transaction>> getTransactions() async {
     final supabaseClient = _ref.read(supabaseClientProvider);
     final response = await supabaseClient!.from('transactions').select();
-    return response.map((e) => Transaction.fromJson(e)).toList();
+    final transactions = response.map((e) => Transaction.fromJson(e)).toList();
+
+    // order from newest to oldest
+    transactions.sort((a, b) => b.date.compareTo(a.date));
+    return transactions;
   }
 
   TransactionsService(this._ref);

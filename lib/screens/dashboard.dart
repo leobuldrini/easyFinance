@@ -30,158 +30,231 @@ class DashboardPage extends ConsumerWidget {
               Expanded(
                 // This makes the remaining content scrollable
                 child: SingleChildScrollView(
-                  child: Stack(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'dashboard.',
+                      Text(
+                        'dashboard.',
+                        style: GoogleFonts.getFont(
+                          'Montserrat',
+                          textStyle: const TextStyle(fontSize: 56, fontWeight: FontWeight.w600),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 10),
+                      recentTransactions.when(
+                        data: (data) {
+                          List<Transaction> transactions = data;
+                          for (int i = 0; i < transactions.length; i++) {
+                            userBalance += (transactions[i].amount * (transactions[i].isIncome ? 1 : -1));
+                          }
+                          return Text(
+                            currencyFormatter.format(userBalance),
                             style: GoogleFonts.getFont(
                               'Montserrat',
-                              textStyle: const TextStyle(fontSize: 56, fontWeight: FontWeight.w600),
+                              textStyle: const TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 10),
-                          recentTransactions.when(
-                            data: (data) {
-                              List<Transaction> transactions = data;
-                              for (int i = 0; i < transactions.length; i++) {
-                                userBalance += (transactions[i].amount * (transactions[i].isIncome ? 1 : -1));
-                              }
-                              return Text(
-                                currencyFormatter.format(userBalance),
-                                style: GoogleFonts.getFont(
-                                  'Montserrat',
-                                  textStyle: const TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
-                                ),
-                              );
-                            },
-                            error: (error, stack) => const Text('Failed to load Total Balance'),
-                            loading: () => const CircularProgressIndicator(),
-                          ),
-                          const Text('Total Balance', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                          const SizedBox(height: 20),
-                          recentTransactions.when(
-                            data: (data) {
-                              List<Transaction> transactions = data;
-                              return data.isEmpty
-                                  ? noTransactions()
-                                  : ListView.separated(
-                                      itemCount: data.length,
-                                      physics: const NeverScrollableScrollPhysics(), // Disables scrolling for the ListView
-                                      shrinkWrap: true, // Allows the ListView to occupy space only for its children
-                                      separatorBuilder: (context, index) => const SizedBox(
-                                        height: 8,
-                                      ),
-                                      itemBuilder: (context, index) {
-                                        return Container(
-                                          margin: const EdgeInsets.only(bottom: 10),
-                                          child: RecentTransactionTile(
-                                            transaction: transactions[index],
-                                          ),
-                                        );
-                                      },
-                                    );
-                            },
-                            loading: () => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            error: (error, stack) => Text('Error: $error'),
-                          ),
-                        ],
+                          );
+                        },
+                        error: (error, stack) => const Text('Failed to load Total Balance'),
+                        loading: () => const CircularProgressIndicator(),
                       ),
-                      Positioned(
-                        top: MediaQuery.of(context).size.height * 0.8,
-                        left: 0,
-                        right: 0,
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
-                              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                      const Text('Total Balance', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
+                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    TextEditingController valueController = TextEditingController();
-                                    TextEditingController categoryController = TextEditingController();
-                                    TextEditingController titleController = TextEditingController();
-                                    valueController.text = '';
-                                    categoryController.text = '';
-                                    titleController.text = '';
+                          ),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  List<String> categories = [
+                                    'Food',
+                                    'Transport',
+                                    'Health',
+                                    'Education',
+                                    'Entertainment',
+                                    'Salary',
+                                    'Investment',
+                                    'Other',
+                                  ];
+                                  List<String> titles = [
+                                    'Lunch',
+                                    'Dinner',
+                                    'Breakfast',
+                                    'Bus',
+                                    'Train',
+                                    'Plane',
+                                    'Medicine',
+                                    'Doctor',
+                                    'Hospital',
+                                    'School',
+                                    'University',
+                                    'Books',
+                                    'Movies',
+                                    'Games',
+                                    'Salary',
+                                    'Dividends',
+                                    'Stocks',
+                                    'Other',
+                                  ];
+                                  bool autocompleteReady = false;
+                                  recentTransactions.when(
+                                    data: (data) {
+                                      List<Transaction> transactions = data;
+                                      for (int i = 0; i < transactions.length; i++) {
+                                        if (categories.contains(transactions[i].sector) == false) {
+                                          categories.add(transactions[i].sector);
+                                        }
+                                        if (titles.contains(transactions[i].title) == false) {
+                                          titles.add(transactions[i].title);
+                                        }
+                                      }
+                                      autocompleteReady = true;
+                                    },
+                                    error: (error, stack) => const Text('Failed to load Total Balance'),
+                                    loading: () => const CircularProgressIndicator(),
+                                  );
 
-                                    return AlertDialog(
-                                      title: const Text('Adicionar transação'),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextField(
-                                            controller: valueController,
-                                            decoration: const InputDecoration(
-                                              labelText: 'Valor',
-                                            ),
-                                          ),
-                                          TextField(
-                                            controller: categoryController,
-                                            decoration: const InputDecoration(
-                                              labelText: 'Categoria',
-                                            ),
-                                          ),
-                                          TextField(
-                                            controller: titleController,
-                                            decoration: const InputDecoration(
-                                              labelText: 'Título',
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text('Cancelar'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            String valueString = valueController.text.isNotEmpty ? valueController.text : '0';
-                                            double value = double.parse(valueString);
-                                            bool income = value > 0;
-                                            if (!income) {
-                                              value = value.abs();
+                                  TextEditingController valueController = TextEditingController();
+                                  TextEditingController categoryController = TextEditingController();
+                                  TextEditingController titleController = TextEditingController();
+                                  valueController.text = '';
+                                  categoryController.text = '';
+                                  titleController.text = '';
+
+                                  return AlertDialog(
+                                    title: const Text('Add Transaction'),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        FutureBuilder(
+                                          future: Future.doWhile(() => autocompleteReady == false),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState == ConnectionState.done) {
+                                              return Column(
+                                                children: [
+                                                  TextField(
+                                                    controller: valueController,
+                                                    decoration: const InputDecoration(
+                                                      labelText: 'Value',
+                                                    ),
+                                                  ),
+                                                  TextField(
+                                                    controller: categoryController,
+                                                    decoration: const InputDecoration(
+                                                      labelText: 'Category',
+                                                    ),
+                                                    onTap: () {
+                                                      showSearch(
+                                                        context: context,
+                                                        delegate: _DataSearch(categories),
+                                                      ).then((value) {
+                                                        if (value != null) {
+                                                          categoryController.text = value;
+                                                        }
+                                                      });
+                                                    },
+                                                  ),
+                                                  TextField(
+                                                    controller: titleController,
+                                                    decoration: const InputDecoration(
+                                                      labelText: 'Title',
+                                                    ),
+                                                    onTap: () {
+                                                      showSearch(
+                                                        context: context,
+                                                        delegate: _DataSearch(titles),
+                                                      ).then((value) {
+                                                        if (value != null) {
+                                                          titleController.text = value;
+                                                        }
+                                                      });
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            } else {
+                                              return const CircularProgressIndicator();
                                             }
-                                            ref.read(transactionControllerProvider.notifier).addTransaction(value, income, categoryController.text, titleController.text)
-                                                .then((value) {
-                                              ref.refresh(recentTransactionsFutureProvider);
-                                            });
-                                            Navigator.of(context).pop();
                                           },
-                                          child: const Text('Adicionar'),
                                         ),
                                       ],
-                                    );
-                                  }
-                              );
-                            },
-                            child: const Text(
-                              'Adicionar transação',
-                              style: TextStyle(color: Colors.white),
-                            ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          String valueString = valueController.text.isNotEmpty ? valueController.text : '0';
+                                          double value = double.parse(valueString);
+                                          bool income = value > 0;
+                                          if (!income) {
+                                            value = value.abs();
+                                          }
+                                          ref.read(transactionControllerProvider.notifier).addTransaction(value, income, categoryController.text, titleController.text)
+                                              .then((value) {
+                                            ref.refresh(recentTransactionsFutureProvider);
+                                          });
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Add'),
+                                      ),
+                                    ],
+                                  );
+                                }
+                            );
+                          },
+                          child: const Text(
+                            'Add Transaction',
+                            style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
-                    ]
-                  )
+                      const SizedBox(height: 20),
+                      recentTransactions.when(
+                        data: (data) {
+                          List<Transaction> transactions = data;
+                          return data.isEmpty
+                              ? noTransactions()
+                              : ListView.separated(
+                                  itemCount: data.length,
+                                  physics: const NeverScrollableScrollPhysics(), // Disables scrolling for the ListView
+                                  shrinkWrap: true, // Allows the ListView to occupy space only for its children
+                                  separatorBuilder: (context, index) => const SizedBox(
+                                    height: 8,
+                                  ),
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: RecentTransactionTile(
+                                        transaction: transactions[index],
+                                      ),
+                                    );
+                                  },
+                                );
+                        },
+                        loading: () => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        error: (error, stack) => Text('Error: $error'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -217,4 +290,65 @@ class DashboardPage extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _DataSearch extends SearchDelegate<String> {
+  final List<String> data;
+  _DataSearch(this.data);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, '');
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(data[index]),
+          onTap: () {
+            close(context, data[index]);
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestionList = query.isEmpty
+        ? data
+        : data.where((element) => element.toLowerCase().startsWith(query.toLowerCase())).toList();
+    return ListView.builder(
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(suggestionList[index]),
+          onTap: () {
+            close(context, suggestionList[index]);
+          },
+        );
+      },
+    );
+  }
+
 }
