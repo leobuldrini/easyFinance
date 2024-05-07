@@ -12,6 +12,10 @@ import 'package:lottie/lottie.dart';
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});
 
+  void printExistingSectors(WidgetRef ref) async {
+    await ref.read(transactionControllerProvider.notifier).retrieveUserSectors(true);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double userBalance = ref.read(userProvider).balance;
@@ -160,6 +164,7 @@ class DashboardPage extends ConsumerWidget {
                                             if (!income) {
                                               value = value.abs();
                                             }
+                                            printExistingSectors(ref);
                                             ref.read(transactionControllerProvider.notifier).addTransaction(value, income, categoryController.text, titleController.text)
                                                 .then((value) {
                                               ref.refresh(recentTransactionsFutureProvider);

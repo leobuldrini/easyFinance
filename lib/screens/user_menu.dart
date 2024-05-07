@@ -13,13 +13,13 @@ class UserMenuState extends State<UserMenu> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: SafeArea(
+      body: const SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+          padding: EdgeInsets.fromLTRB(12, 8, 12, 0),
           child: Column(
             children: [
-              const UserHeader(),
-              const SizedBox(height: 20),
+              UserHeader(),
+              SizedBox(height: 20),
 
             ],
           ),

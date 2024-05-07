@@ -10,6 +10,8 @@ import 'package:easyFinance/screens/user_menu.dart';
 import 'package:easyFinance/widgets/nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 bool logged = false;
@@ -21,7 +23,23 @@ class Home extends ConsumerWidget {
     if (logged) {
       return;
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final database = openDatabase(
+        // Set the path to the database. Note: Using the `join` function from the
+        // `path` package is best practice to ensure the path is correctly
+        // constructed for each platform.
+        join(await getDatabasesPath(), 'user_sectors.db'),
+        onCreate: (db, version) {
+          // Run the CREATE TABLE statement on the database.
+          return db.execute(
+            'CREATE TABLE user_sectors(name TEXT PRIMARY KEY, income BOOLEAN)',
+          );
+        },
+        // Set the version. This executes the onCreate function and provides a
+        // path to perform database upgrades and downgrades.
+        version: 1,
+      );
+      ref.read(sqliteClientProvider.notifier).state = database;
       ref.read(supabaseClientProvider.notifier).state =
           Supabase.instance.client;
       ref.read(loginControllerProvider.notifier).retrieveSession();

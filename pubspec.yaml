@@ -46,6 +46,8 @@ dependencies:
   fl_chart: ^0.67.0
   supabase_flutter: ^2.5.2
   dotenv: ^4.2.0
+  sqflite: ^2.3.3+1
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
