@@ -1,4 +1,5 @@
 import 'package:easyFinance/core/models/transaction.dart';
+import 'package:easyFinance/misc/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -9,7 +10,6 @@ class RecentTransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = DateFormat('dd MMMM yyyy', 'pt_BR');
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
@@ -43,7 +43,7 @@ class RecentTransactionTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    formatter.format(transaction.date),
+                    dateFormatter.format(transaction.date),
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 13,
@@ -55,7 +55,7 @@ class RecentTransactionTile extends StatelessWidget {
             ],
           ),
           Text(
-            '${transaction.isIncome ? '+' : '-'}R\$${transaction.amount.toStringAsFixed(2)}',
+            '${transaction.isIncome ? '+' : '-'}${currencyFormatter.format(transaction.amount)}',
             style: TextStyle(
               color: transaction.isIncome ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.error,
               fontSize: 16,

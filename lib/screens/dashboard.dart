@@ -1,6 +1,7 @@
 import 'package:easyFinance/core/models/transaction.dart';
 import 'package:easyFinance/core/providers/transaction_controller_provider.dart';
 import 'package:easyFinance/core/providers/user_controller_provider.dart';
+import 'package:easyFinance/misc/utilities.dart';
 import 'package:easyFinance/widgets/recent_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,6 +16,7 @@ class DashboardPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double userBalance = ref.read(userProvider).balance;
     AsyncValue recentTransactions = ref.watch(recentTransactionsFutureProvider);
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
@@ -28,69 +30,76 @@ class DashboardPage extends ConsumerWidget {
               Expanded(
                 // This makes the remaining content scrollable
                 child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Stack(
                     children: [
-                      Text(
-                        'dashboard.',
-                        style: GoogleFonts.getFont(
-                          'Montserrat',
-                          textStyle: const TextStyle(fontSize: 56, fontWeight: FontWeight.w600),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 10),
-                      recentTransactions.when(
-                        data: (data) {
-                          List<Transaction> transactions = data;
-                          for (int i = 0; i < transactions.length; i++) {
-                            userBalance += (transactions[i].amount * (transactions[i].isIncome ? 1 : -1));
-                          }
-                          return Text(
-                            'R\$ ${userBalance.toStringAsFixed(2)}',
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'dashboard.',
                             style: GoogleFonts.getFont(
                               'Montserrat',
-                              textStyle: const TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
+                              textStyle: const TextStyle(fontSize: 56, fontWeight: FontWeight.w600),
                             ),
-                          );
-                        },
-                        error: (error, stack) => const Text('Failed to load Total Balance'),
-                        loading: () => const CircularProgressIndicator(),
-                      ),
-                      const Text('Total Balance', style: TextStyle(fontSize: 16, color: Colors.grey)),
-                      const SizedBox(height: 20),
-                      recentTransactions.when(
-                        data: (data) {
-                          List<Transaction> transactions = data;
-                          return data.isEmpty
-                              ? noTransactions()
-                              : ListView.separated(
-                                  itemCount: data.length,
-                                  physics: const NeverScrollableScrollPhysics(), // Disables scrolling for the ListView
-                                  shrinkWrap: true, // Allows the ListView to occupy space only for its children
-                                  separatorBuilder: (context, index) => const SizedBox(
-                                    height: 8,
-                                  ),
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      margin: const EdgeInsets.only(bottom: 10),
-                                      child: RecentTransactionTile(
-                                        transaction: transactions[index],
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 10),
+                          recentTransactions.when(
+                            data: (data) {
+                              List<Transaction> transactions = data;
+                              for (int i = 0; i < transactions.length; i++) {
+                                userBalance += (transactions[i].amount * (transactions[i].isIncome ? 1 : -1));
+                              }
+                              return Text(
+                                currencyFormatter.format(userBalance),
+                                style: GoogleFonts.getFont(
+                                  'Montserrat',
+                                  textStyle: const TextStyle(fontSize: 36, fontWeight: FontWeight.w600),
+                                ),
+                              );
+                            },
+                            error: (error, stack) => const Text('Failed to load Total Balance'),
+                            loading: () => const CircularProgressIndicator(),
+                          ),
+                          const Text('Total Balance', style: TextStyle(fontSize: 16, color: Colors.grey)),
+                          const SizedBox(height: 20),
+                          recentTransactions.when(
+                            data: (data) {
+                              List<Transaction> transactions = data;
+                              return data.isEmpty
+                                  ? noTransactions()
+                                  : ListView.separated(
+                                      itemCount: data.length,
+                                      physics: const NeverScrollableScrollPhysics(), // Disables scrolling for the ListView
+                                      shrinkWrap: true, // Allows the ListView to occupy space only for its children
+                                      separatorBuilder: (context, index) => const SizedBox(
+                                        height: 8,
                                       ),
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          margin: const EdgeInsets.only(bottom: 10),
+                                          child: RecentTransactionTile(
+                                            transaction: transactions[index],
+                                          ),
+                                        );
+                                      },
                                     );
-                                  },
-                                );
-                        },
-                        loading: () => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        error: (error, stack) => Text('Error: $error'),
+                            },
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            error: (error, stack) => Text('Error: $error'),
+                          ),
+                        ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
+                      Positioned(
+                        top: MediaQuery.of(context).size.height * 0.8,
+                        left: 0,
+                        right: 0,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: TextButton(
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.primary),
                               padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 20, vertical: 10)),
@@ -107,7 +116,7 @@ class DashboardPage extends ConsumerWidget {
                                     TextEditingController valueController = TextEditingController();
                                     TextEditingController categoryController = TextEditingController();
                                     TextEditingController titleController = TextEditingController();
-                                    valueController.text = '0';
+                                    valueController.text = '';
                                     categoryController.text = '';
                                     titleController.text = '';
 
@@ -145,13 +154,14 @@ class DashboardPage extends ConsumerWidget {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            double value = double.parse(valueController.text);
+                                            String valueString = valueController.text.isNotEmpty ? valueController.text : '0';
+                                            double value = double.parse(valueString);
                                             bool income = value > 0;
                                             if (!income) {
                                               value = value.abs();
                                             }
                                             ref.read(transactionControllerProvider.notifier).addTransaction(value, income, categoryController.text, titleController.text)
-                                            .then((value) {
+                                                .then((value) {
                                               ref.refresh(recentTransactionsFutureProvider);
                                             });
                                             Navigator.of(context).pop();
@@ -164,14 +174,14 @@ class DashboardPage extends ConsumerWidget {
                               );
                             },
                             child: const Text(
-                                'Adicionar transação',
-                                style: TextStyle(color: Colors.white),
+                              'Adicionar transação',
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ],
-                  ),
+                    ]
+                  )
                 ),
               ),
             ],

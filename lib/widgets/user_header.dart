@@ -36,12 +36,8 @@ class _UserHeaderState extends ConsumerState<UserHeader> {
               color: Theme.of(context).colorScheme.onBackground,
             ),
             const SizedBox(width: 20),
-            // TODO : dropdown menu
             GestureDetector(
               onTap: () {
-                print(ref.read(supabaseClientProvider.notifier).state?.auth.currentUser?.email);
-              },
-              onLongPress: () {
                 ref.read(loginControllerProvider.notifier).signOut();
               },
               child: Row(
@@ -56,8 +52,8 @@ class _UserHeaderState extends ConsumerState<UserHeader> {
                     ),
                   ),
                   Icon(
-                    Icons.arrow_drop_down,
-                    size: 24,
+                    Icons.logout_outlined,
+                    size: 30,
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
                 ],

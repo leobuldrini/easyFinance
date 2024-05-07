@@ -58,11 +58,11 @@ class NavBar extends ConsumerWidget {
           ),
           IconButton(
             onPressed: () {
-              // ref.read(currentPageProvider.notifier).state = 3;
+              ref.read(currentPageProvider.notifier).state = 3;
             },
             icon: Icon(
-              Icons.person_rounded,
-              size: 24,
+              Icons.edit_note_sharp,
+              size: 30,
               color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),

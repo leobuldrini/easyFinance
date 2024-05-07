@@ -1,5 +1,6 @@
 import 'package:easyFinance/core/models/transaction.dart';
 import 'package:easyFinance/core/providers/transaction_controller_provider.dart';
+import 'package:easyFinance/misc/utilities.dart';
 import 'package:easyFinance/widgets/user_header.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -129,7 +130,7 @@ class MonthBalance extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(
-            'R\$${balance.toStringAsFixed(2)}',
+            currencyFormatter.format(balance),
             style: GoogleFonts.getFont(
               'Montserrat',
               textStyle: TextStyle(
@@ -180,7 +181,7 @@ class MonthlyIncome extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Text(
-              'R\$${balance.toStringAsFixed(2)}',
+              currencyFormatter.format(balance),
               style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
                 fontSize: 24,
@@ -208,7 +209,7 @@ class MonthlyIncome extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'R\$${incomes[i].amount}',
+                      currencyFormatter.format(incomes[i].amount),
                       style: GoogleFonts.getFont('Montserrat',
                           textStyle: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
@@ -260,7 +261,7 @@ class MonthlyOutcome extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           Text(
-            'R\$${balance.toStringAsFixed(2)}',
+            currencyFormatter.format(balance),
             style: TextStyle(
               color: Theme.of(context).colorScheme.error,
               fontSize: 24,
@@ -285,7 +286,7 @@ class MonthlyOutcome extends StatelessWidget {
                           )),
                     ),
                     Text(
-                      'R\$${outcomes[i].amount}',
+                      currencyFormatter.format(outcomes[i].amount),
                       style: GoogleFonts.getFont('Montserrat',
                           textStyle: TextStyle(
                             color: Theme.of(context).colorScheme.error,
